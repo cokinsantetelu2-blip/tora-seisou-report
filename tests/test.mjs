@@ -1,0 +1,11 @@
+import assert from'node:assert/strict';import fs from'node:fs';import path from'node:path';import{emptyJob,escapeHtml,searchJobs,backupPayload,validateBackup}from'../lib.js';import{cleaningReport,defectReport}from'../report.js';
+const j=emptyJob();assert.ok(j.id);assert.match(j.workDate,/^\d{4}-\d{2}-\d{2}$/);assert.equal(escapeHtml('<script>'),'&lt;script&gt;');
+const jobs=[{property:'とらハイツ',client:'元請A',room:'101',address:'東京',worker:'田中'},{property:'別物件',client:'元請B',room:'202',address:'大阪',worker:'佐藤'}];assert.equal(searchJobs(jobs,'とら').length,1);assert.equal(searchJobs(jobs,'大阪').length,1);assert.equal(searchJobs(jobs,'').length,2);
+const b=backupPayload(jobs);assert.equal(validateBackup(b),true);assert.equal(validateBackup({jobs:[]}),false);
+const reportJob={...j,client:'テスト元請け',property:'テスト物件',photos:[{area:'浴室',phase:'before',dataUrl:'data:image/png;base64,AA==',caption:'前'}],defects:[{place:'浴室',type:'破損',status:'報告済み',description:'テスト',photo:null},{place:'玄関',type:'不足',status:'未対応',description:'テスト2',photo:null}]};
+const clean=cleaningReport(reportJob),defect=defectReport(reportJob);assert.match(clean,/清掃完了報告書/);assert.match(clean,/ビフォー/);assert.match(clean,/@page/);assert.match(defect,/不具合報告書/);assert.match(defect,/class="page"/);assert.doesNotMatch(clean,/<script>テスト/);
+const root=path.resolve(import.meta.dirname,'..');for(const f of['index.html','styles.css','app.js','db.js','lib.js','report.js','sw.js','manifest.webmanifest','icons/icon-192.png','icons/icon-512.png'])assert.ok(fs.existsSync(path.join(root,f)),f);
+JSON.parse(fs.readFileSync(path.join(root,'manifest.webmanifest'),'utf8'));
+const source=['index.html','app.js','db.js','lib.js','report.js','sw.js','README.md'].map(f=>fs.readFileSync(path.join(root,f),'utf8')).join('\n');
+for(const re of[/ghp_[A-Za-z0-9]+/,/github_pat_[A-Za-z0-9_]+/,/AIza[0-9A-Za-z_-]{20,}/,/BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY/,/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i,/D:\\Codex\\Projects/i,/テスト県テスト市/])assert.equal(re.test(source),false,`sensitive pattern ${re}`);
+console.log('PASS: functions, Japanese PDF HTML/page breaks, assets, manifest, backup schema, secret/personal-data scan');

@@ -15,7 +15,7 @@
 
 ## Google Drive設定
 
-Google Cloud ConsoleでWeb OAuth Client IDを作成し、承認済みJavaScript生成元にGitHub PagesのURLを登録してください。Client IDをアプリの設定画面へ入力すると、JSONバックアップをDriveへ保存できます。Client IDは秘密鍵ではありませんが、リポジトリには保存しません。
+Google Cloud ConsoleでWeb OAuth Client IDを作成し、承認済みJavaScript生成元にGitHub PagesのURLを登録してください。Client IDをアプリの設定画面へ入力すると、JSONバックアップをDriveへ保存し、同じアプリが作成した最新バックアップから復元できます。権限は`drive.file`に限定します。Client IDは秘密鍵ではありませんが、リポジトリには保存しません。クライアントシークレットとアクセストークンはアプリにもリポジトリにも保存しません。
 
 ## 開発確認
 

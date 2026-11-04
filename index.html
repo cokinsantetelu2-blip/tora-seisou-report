@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#123b2f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="とら清掃報告">
+  <title>とら清掃報告</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div><span class="brand-mark">と</span><strong>とら清掃報告</strong><small id="saveState">端末内保存</small></div>
+  <button id="installBtn" class="ghost hidden">ホームに追加</button>
+</header>
+<nav class="tabs" aria-label="メインメニュー">
+  <button data-view="editor" class="active">現場</button>
+  <button data-view="photos">写真</button>
+  <button data-view="defects">不具合</button>
+  <button data-view="history">履歴</button>
+  <button data-view="settings">設定</button>
+</nav>
+<main>
+<section id="editor" class="view active">
+  <div class="section-head"><div><p class="eyebrow">空室清掃</p><h1>現場情報</h1></div><button id="newJobBtn" class="secondary">＋ 新規</button></div>
+  <input type="hidden" id="jobId">
+  <div class="card form-grid">
+    <label>元請け<input id="client" autocomplete="organization" placeholder="例：株式会社〇〇"></label>
+    <label>物件名<input id="property" placeholder="例：とらハイツ"></label>
+    <label>部屋番号<input id="room" inputmode="text" placeholder="例：101"></label>
+    <label>作業日<input id="workDate" type="date"></label>
+    <label class="wide">住所<input id="address" autocomplete="street-address" placeholder="都道府県・市区町村・番地"></label>
+    <label>担当者<input id="worker" placeholder="担当者名"></label>
+    <label class="wide">備考<textarea id="notes" rows="4" placeholder="鍵、追加作業、連絡事項など"></textarea></label>
+  </div>
+  <div class="action-row sticky-actions">
+    <button id="saveBtn" class="primary">保存</button>
+    <button id="cleaningPdfBtn" class="secondary">清掃報告PDF</button>
+    <button id="defectPdfBtn" class="secondary">不具合PDF</button>
+  </div>
+</section>
+<section id="photos" class="view">
+  <div class="section-head"><div><p class="eyebrow">BEFORE / AFTER</p><h1>写真</h1></div><span id="photoCount" class="pill">0枚</span></div>
+  <p class="hint">場所と区分を選び、撮影または写真を追加してください。写真はこの端末内に保存されます。</p>
+  <div class="card photo-controls">
+    <label>場所<select id="photoArea"></select></label>
+    <div class="segment"><button data-phase="before" class="active">ビフォー</button><button data-phase="after">アフター</button></div>
+    <label class="camera-button">📷 撮影・写真を追加<input id="photoInput" type="file" accept="image/*" capture="environment" multiple></label>
+  </div>
+  <div id="photoSections"></div>
+</section>
+<section id="defects" class="view">
+  <div class="section-head"><div><p class="eyebrow">ISSUE REPORT</p><h1>不具合報告</h1></div><button id="addDefectBtn" class="primary">＋ 追加</button></div>
+  <div id="defectList" class="stack"></div>
+</section>
+<section id="history" class="view">
+  <div class="section-head"><div><p class="eyebrow">HISTORY</p><h1>履歴</h1></div></div>
+  <label class="search">🔎<input id="historySearch" type="search" placeholder="物件名・住所・元請け・部屋番号で検索"></label>
+  <div id="historyList" class="stack"></div>
+</section>
+<section id="settings" class="view">
+  <div class="section-head"><div><p class="eyebrow">BACKUP</p><h1>保存とバックアップ</h1></div></div>
+  <div class="card stack">
+    <div><h2>端末バックアップ</h2><p class="hint">写真を含むJSONを保存します。復元すると同じIDの現場は更新されます。</p></div>
+    <button id="exportBtn" class="primary">JSONバックアップを保存</button>
+    <label class="secondary file-button">JSONから復元<input id="importInput" type="file" accept="application/json"></label>
+  </div>
+  <div class="card stack">
+    <div><h2>Googleドライブ</h2><p class="hint">認証情報を公開コードへ保存しないため、OAuth Client IDは端末内だけに保存します。設定後はdrive.file権限でアプリが作成したバックアップのみ扱います。</p></div>
+    <label>Google OAuth Client ID<input id="googleClientId" autocomplete="off" placeholder="未設定"></label>
+    <button id="saveGoogleConfig" class="secondary">端末内に設定を保存</button>
+    <button id="driveBackupBtn" class="secondary">Googleドライブへバックアップ</button>
+    <p id="driveStatus" class="hint">現在：未設定</p>
+  </div>
+  <div class="card"><h2>保存容量</h2><p id="storageInfo">確認中…</p></div>
+  <div class="card"><h2>ホーム画面へ追加</h2><p class="hint">iPhone Safari：共有ボタン →「ホーム画面に追加」。Chrome：メニュー →「アプリをインストール」。</p></div>
+</section>
+</main>
+<div id="toast" role="status" aria-live="polite"></div>
+<template id="defectTemplate">
+  <article class="card defect-card" data-id="">
+    <div class="card-title"><strong>不具合</strong><button class="danger delete-defect">削除</button></div>
+    <div class="form-grid">
+      <label>箇所<input class="defect-place" placeholder="例：浴室ドア"></label>
+      <label>種別<select class="defect-type"><option>破損</option><option>汚れ</option><option>設備不良</option><option>不足</option><option>その他</option></select></label>
+      <label>対応状況<select class="defect-status"><option>未対応</option><option>報告済み</option><option>応急対応</option><option>対応完了</option></select></label>
+      <label class="wide">説明<textarea class="defect-description" rows="3"></textarea></label>
+      <label class="camera-button wide">📷 不具合写真<input class="defect-photo" type="file" accept="image/*" capture="environment"></label>
+      <div class="defect-preview wide"></div>
+    </div>
+  </article>
+</template>
+<script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+{
+  "name":"tora-seisou-report",
+  "private":true,
+  "type":"module",
+  "scripts":{"test":"node tests/test.mjs"}
+}

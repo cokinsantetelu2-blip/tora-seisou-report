@@ -96,6 +96,12 @@
     </div>
   </article>
 </template>
-<script type="module" src="app.js?v=3"></script>
+<script type="module">
+  import('./app.js?v=4').catch(error=>{
+    console.error('とら清掃報告の起動に失敗しました',error);
+    const state=document.getElementById('saveState');
+    if(state)state.textContent=`起動エラー：${error.message}`;
+  });
+</script>
 </body>
 </html>

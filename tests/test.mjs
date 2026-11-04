@@ -4,13 +4,13 @@ const jobs=[{property:'とらハイツ',client:'元請A',room:'101',address:'東
 const b=backupPayload(jobs);assert.equal(validateBackup(b),true);assert.equal(validateBackup({jobs:[]}),false);
 const reportJob={...j,client:'テスト元請け',property:'テスト物件',photos:[{area:'浴室',phase:'before',dataUrl:'data:image/png;base64,AA==',caption:'前'}],defects:[{place:'浴室',type:'破損',status:'報告済み',description:'テスト',photo:null},{place:'玄関',type:'不足',status:'未対応',description:'テスト2',photo:null}]};
 const clean=cleaningReport(reportJob),defect=defectReport(reportJob);assert.match(clean,/清掃完了報告書/);assert.match(clean,/ビフォー/);assert.match(clean,/@page/);assert.match(defect,/不具合報告書/);assert.match(defect,/class="page"/);assert.doesNotMatch(clean,/<script>テスト/);
-const root=path.resolve(import.meta.dirname,'..');for(const f of['index.html','styles.css','app.js','drive.js','db.js','lib.js','report.js','sw.js','manifest.webmanifest','icons/icon-192.png','icons/icon-512.png'])assert.ok(fs.existsSync(path.join(root,f)),f);
+const root=path.resolve(import.meta.dirname,'..');for(const f of['index.html','styles.css','app.js','app.bundle.js','drive.js','db.js','lib.js','report.js','sw.js','manifest.webmanifest','icons/icon-192.png','icons/icon-512.png'])assert.ok(fs.existsSync(path.join(root,f)),f);
 JSON.parse(fs.readFileSync(path.join(root,'manifest.webmanifest'),'utf8'));
 assert.equal(DRIVE_SCOPE,'https://www.googleapis.com/auth/drive.file');
 assert.equal(driveFileName(new Date('2026-11-04T00:00:00Z')),'とら清掃報告-2026-11-04.json');
 assert.match(driveListUrl(),/drive\/v3\/files\?/);assert.match(decodeURIComponent(driveListUrl()),/とら清掃報告-/);
 assert.equal(latestDriveBackup({files:[{id:'1',name:'new'},{id:'2',name:'old'}]}).id,'1');assert.equal(latestDriveBackup({files:[]}),null);
 const multi=multipartBackup({kind:'tora-seisou-report-backup',jobs:[]},'test.json','boundary');assert.match(multi,/test\.json/);assert.match(multi,/tora-seisou-report/);
-const source=['index.html','app.js','drive.js','db.js','lib.js','report.js','sw.js','README.md'].map(f=>fs.readFileSync(path.join(root,f),'utf8')).join('\n');
+const source=['index.html','app.js','app.bundle.js','drive.js','db.js','lib.js','report.js','sw.js','README.md'].map(f=>fs.readFileSync(path.join(root,f),'utf8')).join('\n');
 for(const re of[/ghp_[A-Za-z0-9]+/,/github_pat_[A-Za-z0-9_]+/,/AIza[0-9A-Za-z_-]{20,}/,/GOCSPX-[0-9A-Za-z_-]+/,/\.apps\.googleusercontent\.com/,/BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY/,/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i,/D:\\Codex\\Projects/i,/テスト県テスト市/])assert.equal(re.test(source),false,`sensitive pattern ${re}`);
 console.log('PASS: functions, Japanese PDF HTML/page breaks, assets, manifest, backup schema, secret/personal-data scan');

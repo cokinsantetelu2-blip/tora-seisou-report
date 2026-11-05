@@ -71,7 +71,7 @@
     <label class="secondary file-button">JSONから復元<input id="importInput" type="file" accept="application/json"></label>
   </div>
   <div class="card stack">
-    <div><h2>Googleドライブ</h2><p class="hint">認証情報を公開コードへ保存しないため、OAuth Client IDは端末内だけに保存します。設定後はdrive.file権限でアプリが作成したバックアップのみ扱います。</p></div>
+    <div><h2>Googleドライブ</h2><p class="hint">公開識別子のOAuth Client IDは設定済みです。秘密鍵やアクセストークンは保存しません。drive.file権限で、このアプリが作成したバックアップのみ扱います。</p></div>
     <label>Google OAuth Client ID<input id="googleClientId" autocomplete="off" placeholder="未設定"></label>
     <button id="saveGoogleConfig" class="secondary">端末内に設定を保存</button>
     <button id="driveBackupBtn" class="secondary">Googleドライブへバックアップ</button>
@@ -96,6 +96,6 @@
     </div>
   </article>
 </template>
-<script defer src="app.bundle.js?v=6"></script>
+<script defer src="app.bundle.js?v=7"></script>
 </body>
 </html>

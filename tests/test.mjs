@@ -12,5 +12,6 @@ assert.match(driveListUrl(),/drive\/v3\/files\?/);assert.match(decodeURIComponen
 assert.equal(latestDriveBackup({files:[{id:'1',name:'new'},{id:'2',name:'old'}]}).id,'1');assert.equal(latestDriveBackup({files:[]}),null);
 const multi=multipartBackup({kind:'tora-seisou-report-backup',jobs:[]},'test.json','boundary');assert.match(multi,/test\.json/);assert.match(multi,/tora-seisou-report/);
 const source=['index.html','app.js','app.bundle.js','drive.js','db.js','lib.js','report.js','sw.js','README.md'].map(f=>fs.readFileSync(path.join(root,f),'utf8')).join('\n');
-for(const re of[/ghp_[A-Za-z0-9]+/,/github_pat_[A-Za-z0-9_]+/,/AIza[0-9A-Za-z_-]{20,}/,/GOCSPX-[0-9A-Za-z_-]+/,/\.apps\.googleusercontent\.com/,/BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY/,/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i,/D:\\Codex\\Projects/i,/テスト県テスト市/])assert.equal(re.test(source),false,`sensitive pattern ${re}`);
+for(const re of[/ghp_[A-Za-z0-9]+/,/github_pat_[A-Za-z0-9_]+/,/AIza[0-9A-Za-z_-]{20,}/,/GOCSPX-[0-9A-Za-z_-]+/,/BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY/,/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i,/D:\\Codex\\Projects/i,/テスト県テスト市/])assert.equal(re.test(source),false,`sensitive pattern ${re}`);
+assert.match(source,/532652666507-dtjsrmnmtqpg4n3u2qikgerebojms2lp\.apps\.googleusercontent\.com/);
 console.log('PASS: functions, Japanese PDF HTML/page breaks, assets, manifest, backup schema, secret/personal-data scan');

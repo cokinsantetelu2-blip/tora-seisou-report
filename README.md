@@ -5,7 +5,7 @@
 ## データ保護
 
 - 物件情報と写真はIndexedDBへ保存され、GitHubへ送信されません。
-- OAuth Client IDは利用者が設定した端末のlocalStorageだけに保存されます。
+- Web OAuth Client IDは公開識別子としてアプリに設定済みです。必要な場合だけブラウザごとに上書きできます。
 - Google Driveは`drive.file`権限を要求し、このアプリが作成するバックアップだけを扱います。
 - GitHub Pagesは静的アプリ本体だけを公開します。
 
@@ -15,7 +15,7 @@
 
 ## Google Drive設定
 
-Google Cloud ConsoleでWeb OAuth Client IDを作成し、承認済みJavaScript生成元にGitHub PagesのURLを登録してください。Client IDをアプリの設定画面へ入力すると、JSONバックアップをDriveへ保存し、同じアプリが作成した最新バックアップから復元できます。権限は`drive.file`に限定します。Client IDは秘密鍵ではありませんが、リポジトリには保存しません。クライアントシークレットとアクセストークンはアプリにもリポジトリにも保存しません。
+Google Cloud Consoleで作成したWeb OAuth Client IDとGitHub Pagesの承認済みJavaScript生成元は設定済みです。ChromeやiPhoneでClient IDを入力せず、JSONバックアップをDriveへ保存し、同じアプリが作成した最新バックアップから復元できます。権限は`drive.file`に限定します。Client IDは公開識別子であり、クライアントシークレットとアクセストークンはアプリにもリポジトリにも保存しません。
 
 ## 開発確認
 
@@ -27,5 +27,5 @@ python -m http.server 4173
 ## 制約
 
 - iPhone実機でのカメラ、ホーム画面追加、印刷UIは実機未確認です。
-- Google Drive自動保存はOAuth Client ID設定後に利用できます。
+- Google DriveバックアップはGoogle本人認証後に利用できます。
 - Googleフォトとの自動同期は提供APIの制限上、実装していません。iPhone側のGoogleフォトバックアップを併用してください。

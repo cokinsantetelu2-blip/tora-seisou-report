@@ -14,4 +14,11 @@ const multi=multipartBackup({kind:'tora-seisou-report-backup',jobs:[]},'test.jso
 const source=['index.html','app.js','app.bundle.js','drive.js','db.js','lib.js','report.js','sw.js','README.md'].map(f=>fs.readFileSync(path.join(root,f),'utf8')).join('\n');
 for(const re of[/ghp_[A-Za-z0-9]+/,/github_pat_[A-Za-z0-9_]+/,/AIza[0-9A-Za-z_-]{20,}/,/GOCSPX-[0-9A-Za-z_-]+/,/BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY/,/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i,/D:\\Codex\\Projects/i,/テスト県テスト市/])assert.equal(re.test(source),false,`sensitive pattern ${re}`);
 assert.match(source,/532652666507-dtjsrmnmtqpg4n3u2qikgerebojms2lp\.apps\.googleusercontent\.com/);
+const appSource=fs.readFileSync(path.join(root,'app.js'),'utf8');
+assert.match(appSource,/function driveTokenFromTap\(\)/);
+assert.ok(appSource.indexOf('driveBackup(driveTokenFromTap())')>=0,'Drive auth starts directly in the backup click handler');
+assert.ok(appSource.indexOf('driveRestore(driveTokenFromTap())')>=0,'Drive auth starts directly in the restore click handler');
+assert.match(appSource,/popup_failed_to_open/);assert.match(appSource,/popup_closed/);
+assert.match(appSource,/prepareGoogleAuth\(\)/);
 console.log('PASS: functions, Japanese PDF HTML/page breaks, assets, manifest, backup schema, secret/personal-data scan');
+

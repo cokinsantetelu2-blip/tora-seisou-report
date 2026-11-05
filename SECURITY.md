@@ -10,8 +10,9 @@ GitHub PagesにはHTML、CSS、JavaScript、PWAアイコンだけが公開され
 
 ## Google Drive
 
-OAuth Client IDはアプリの設定画面から端末内localStorageへ保存します。アクセストークンはメモリ内だけで扱い、永続化しません。要求スコープは`drive.file`です。
+OAuth Client IDは公開識別子としてアプリに設定し、必要な場合だけ設定画面から端末内localStorageへ上書きします。アクセストークンはメモリ内だけで扱い、永続化しません。要求スコープは`drive.file`です。
 
 ## 注意
 
 GitHub Pagesは公開サイトです。アプリ本体へログイン機能はありません。共有端末では使用せず、端末の画面ロックと定期的なJSONバックアップを利用してください。
+

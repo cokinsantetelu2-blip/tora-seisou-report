@@ -29,3 +29,7 @@ python -m http.server 4173
 - iPhone実機でのカメラ、ホーム画面追加、印刷UIは実機未確認です。
 - Google DriveバックアップはGoogle本人認証後に利用できます。
 - Googleフォトとの自動同期は提供APIの制限上、実装していません。iPhone側のGoogleフォトバックアップを併用してください。
+
+
+iPhone Safariのポップアップ制限に対応するため、Google Identity Servicesはページ起動時に準備し、アクセストークン要求はバックアップ／復元ボタンのタップから同期的に開始します。IndexedDBの現場・写真データは更新処理の対象外です。
+
